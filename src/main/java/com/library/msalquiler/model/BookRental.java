@@ -1,7 +1,6 @@
-package com.library.msalquiler.bookRental;
+package com.library.msalquiler.model;
 
 
-import com.library.msalquiler.rent.Rent;
 import jakarta.persistence.*;
 
 @Entity

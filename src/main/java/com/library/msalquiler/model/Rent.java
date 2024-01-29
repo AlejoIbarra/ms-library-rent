@@ -1,7 +1,7 @@
-package com.library.msalquiler.rent;
+package com.library.msalquiler.model;
 
-import com.library.msalquiler.bookRental.BookRental;
-import com.library.msalquiler.client.Client;
+import com.library.msalquiler.model.BookRental;
+import com.library.msalquiler.model.Client;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;

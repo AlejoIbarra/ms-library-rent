@@ -1,5 +1,6 @@
-package com.library.msalquiler.client;
+package com.library.msalquiler.repository;
 
+import com.library.msalquiler.model.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

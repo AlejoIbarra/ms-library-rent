@@ -1,5 +1,7 @@
-package com.library.msalquiler.bookRental;
+package com.library.msalquiler.controller;
 
+import com.library.msalquiler.service.BookRentalService;
+import com.library.msalquiler.model.BookRental;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

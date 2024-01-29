@@ -1,12 +1,9 @@
-package com.library.msalquiler.client;
+package com.library.msalquiler.model;
 
 
-import com.library.msalquiler.rent.Rent;
 import jakarta.persistence.*;
 
 
-
-import javax.annotation.processing.Generated;
 import java.time.LocalDate;
 import java.util.List;
 

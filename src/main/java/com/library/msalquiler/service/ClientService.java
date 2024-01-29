@@ -1,5 +1,7 @@
-package com.library.msalquiler.client;
+package com.library.msalquiler.service;
 
+import com.library.msalquiler.model.Client;
+import com.library.msalquiler.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
