@@ -10,28 +10,28 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-/**
- * Service that manages operations related to clients.
- */
+
 @Service
 public class ClientService {
 
     private final ClientRepository clientRepository;
-    private final HashMap<String, Object> data = new HashMap<>();
+    private final HashMap<String, Object> data;
 
     @Autowired
     public ClientService(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
+        this.data = new HashMap<>();
     }
+
     /**
      * Retrieves all clients stored in the system.
      *
      * @return List of clients.
      */
-
     public List<Client> getClients() {
-        return this.clientRepository.findAll();
+        return clientRepository.findAll();
     }
+
     /**
      * Retrieves a client by ID.
      *
@@ -43,14 +43,14 @@ public class ClientService {
 
         if (client.isPresent()) {
             data.put("data", client.get());
-            data.put("message", "Cliente encontrado exitosamente");
-            return new ResponseEntity<>(data, HttpStatus.OK);
+            data.put("message", "Client found successfully");
+            return ResponseEntity.ok(data);
         } else {
-            data.put("error", true);
-            data.put("message", "No se encontró el cliente con el ID proporcionado");
-            return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(getErrorResponse("Client with the provided ID not found"));
         }
     }
+
     /**
      * Create a new client.
      *
@@ -61,16 +61,15 @@ public class ClientService {
         Optional<Client> res = clientRepository.findByIdentity(client.getIdentity());
 
         if (res.isPresent()) {
-            data.put("error", true);
-            data.put("message", "Ya está creado el cliente");
-            return new ResponseEntity<>(data, HttpStatus.CONFLICT);
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(getErrorResponse("Client already exists"));
         }
 
         clientRepository.save(client);
         data.put("data", client);
-        data.put("message", "Se creó exitosamente");
+        data.put("message", "Successfully created");
 
-        return new ResponseEntity<>(data, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(data);
     }
 
     /**
@@ -85,29 +84,19 @@ public class ClientService {
 
         if (existingClient.isPresent()) {
             Client client = existingClient.get();
-
-
-            client.setFirst_name(updatedClient.getFirst_name());
-            client.setLast_name(updatedClient.getLast_name());
-            client.setBirthdate(updatedClient.getBirthdate());
-            client.setMail(updatedClient.getMail());
-            client.setAddress(updatedClient.getAddress());
-            client.setPhone(updatedClient.getPhone());
-            client.setIdentity(updatedClient.getIdentity());
-            client.setType_identity(updatedClient.getType_identity());
+            updateClientProperties(client, updatedClient);
 
             clientRepository.save(client);
-
             data.put("data", client);
-            data.put("message", "Cliente actualizado exitosamente");
+            data.put("message", "Client updated successfully");
 
-            return new ResponseEntity<>(data, HttpStatus.OK);
+            return ResponseEntity.ok(data);
         } else {
-            data.put("error", true);
-            data.put("message", "No se encontró el cliente con el ID proporcionado");
-            return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(getErrorResponse("Client with the provided ID not found"));
         }
     }
+
     /**
      * Deletes a client by its ID.
      *
@@ -115,17 +104,33 @@ public class ClientService {
      * @return ResponseEntity with the operation result.
      */
     public ResponseEntity<Object> deleteClient(Long id) {
-        boolean exists = this.clientRepository.existsById(id);
+        boolean exists = clientRepository.existsById(id);
 
         if (!exists) {
-            data.put("error", true);
-            data.put("message", "Client does not exist");
-            return new ResponseEntity<>(data, HttpStatus.CONFLICT);
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(getErrorResponse("Client does not exist"));
         }
 
         clientRepository.deleteById(id);
-        data.put("message", "Eliminado Exitosamente");
+        data.put("message", "Successfully deleted");
 
-        return new ResponseEntity<>(data, HttpStatus.ACCEPTED);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(data);
+    }
+
+    private HashMap<String, Object> getErrorResponse(String errorMessage) {
+        data.put("error", true);
+        data.put("message", errorMessage);
+        return data;
+    }
+
+    private void updateClientProperties(Client client, Client updatedClient) {
+        client.setFirst_name(updatedClient.getFirst_name());
+        client.setLast_name(updatedClient.getLast_name());
+        client.setBirthdate(updatedClient.getBirthdate());
+        client.setMail(updatedClient.getMail());
+        client.setAddress(updatedClient.getAddress());
+        client.setPhone(updatedClient.getPhone());
+        client.setIdentity(updatedClient.getIdentity());
+        client.setType_identity(updatedClient.getType_identity());
     }
 }

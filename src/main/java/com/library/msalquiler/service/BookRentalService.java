@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,43 +15,39 @@ public class BookRentalService {
 
     private final BookRentalRepository bookRentalRepository;
 
-    private final HashMap<String, Object> data = new HashMap<>();
-
     @Autowired
-    public BookRentalService(BookRentalRepository bookRentalRepository){
+    public BookRentalService(BookRentalRepository bookRentalRepository) {
         this.bookRentalRepository = bookRentalRepository;
     }
 
-    public List<BookRental> getRentedBooks(){
-        return this.bookRentalRepository.findAll();
+    public List<BookRental> getRentedBooks() {
+        return bookRentalRepository.findAll();
     }
 
-    public ResponseEntity<Object> newBookRental (BookRental bookRental) {
-        Optional<BookRental> res = bookRentalRepository.findById(bookRental.getId());
-
-        if (res.isPresent()) {
-            data.put("error", true);
-            data.put("message", "Ya está creado el registro");
-            return new ResponseEntity<>(data, HttpStatus.CONFLICT);
+    public ResponseEntity<Object> newBookRental(BookRental bookRental) {
+        if (bookRentalRepository.existsById(bookRental.getId())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("The record already exists");
         }
 
-        bookRentalRepository.save(bookRental);
-        data.put("data", bookRental);
-        data.put("message", "Se creó exitosamente");
-
-        return new ResponseEntity<>(data, HttpStatus.CREATED);
+        try {
+            bookRentalRepository.save(bookRental);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body("Successfully created");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error saving the record in the database");
+        }
     }
 
-    public ResponseEntity<Object> deleteBookRental(@PathVariable("bookRentalId") Long id) {
-        boolean exist = this.bookRentalRepository.existsById(id);
-        if (!exist) {
-            data.put("error", true);
-            data.put("message", "No existe el registro");
-            return new ResponseEntity<>(data, HttpStatus.CONFLICT);
+    public ResponseEntity<Object> deleteBookRental(Long id) {
+        if (!bookRentalRepository.existsById(id)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("The record does not exist");
         }
+
         bookRentalRepository.deleteById(id);
-        data.put("message", "Eliminado exitosamente");
-
-        return new ResponseEntity<>(data, HttpStatus.ACCEPTED);
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body("Successfully deleted");
     }
 }
