@@ -20,12 +20,12 @@ public class Rent {
 
     private Client client;
 
-    private LocalDate start_date;
-    private LocalDate end_date;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private LocalDate return_date;
     private float penalty_fee;
 
-    @OneToMany(mappedBy="rent")
+    @OneToMany(mappedBy = "rent")
     private List<BookRental> bookRentals;
 
     //-----------------------------------
@@ -35,17 +35,24 @@ public class Rent {
     public Rent() {
     }
 
-    public Rent(Client client, LocalDate start_date, LocalDate end_date, LocalDate return_date, float penalty_fee) {
+    public Rent(Client client, LocalDate startDate, LocalDate endDate, LocalDate return_date, float penalty_fee, List<BookRental> bookRentals) {
         this.client = client;
-        this.start_date = start_date;
-        this.end_date = end_date;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.return_date = return_date;
         this.penalty_fee = penalty_fee;
+        this.bookRentals = bookRentals;
     }
 
-    //----------------------------------
-    //Methods
-    //----------------------------------
+    public Rent(Long id, Client client, LocalDate startDate, LocalDate endDate, LocalDate return_date, float penalty_fee, List<BookRental> bookRentals) {
+        this.id = id;
+        this.client = client;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.return_date = return_date;
+        this.penalty_fee = penalty_fee;
+        this.bookRentals = bookRentals;
+    }
 
     public Long getId() {
         return id;
@@ -63,20 +70,20 @@ public class Rent {
         this.client = client;
     }
 
-    public LocalDate getStart_date() {
-        return start_date;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public void setStart_date(LocalDate start_date) {
-        this.start_date = start_date;
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 
-    public LocalDate getEnd_date() {
-        return end_date;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
-    public void setEnd_date(LocalDate end_date) {
-        this.end_date = end_date;
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 
     public LocalDate getReturn_date() {
@@ -93,5 +100,13 @@ public class Rent {
 
     public void setPenalty_fee(float penalty_fee) {
         this.penalty_fee = penalty_fee;
+    }
+
+    public List<BookRental> getBookRentals() {
+        return bookRentals;
+    }
+
+    public void setBookRentals(List<BookRental> bookRentals) {
+        this.bookRentals = bookRentals;
     }
 }

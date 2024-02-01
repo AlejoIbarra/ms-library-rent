@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -28,8 +29,20 @@ public class RentController {
         return this.rentService.newRent(rent);
     }
 
-    //@PutMapping Falta editar
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateRent(@PathVariable Long id, @RequestBody Rent updatedRent) {
+        return rentService.updateRent(id, updatedRent);
+    }
+    @GetMapping("/rents_date")
 
+    public ResponseEntity<List<Rent>> searchRentsByStartDate(@RequestParam("startDate") LocalDate startDate) {
+        List<Rent> rents = rentService.searchRentsByStartDate(startDate);
+        return ResponseEntity.ok(rents);
+    }
+    @PatchMapping("/{id}")
+    public ResponseEntity<Object> patchReturnDate(@PathVariable Long id) {
+        return rentService.patchReturnDate(id);
+    }
 /**
     @DeleteMapping(path = "rentId")
     public ResponseEntity<Object> delete(@PathVariable("rentId") Long id){
@@ -38,8 +51,8 @@ public class RentController {
 
  */
 
-@DeleteMapping(path = "{rentId}")
-public ResponseEntity<Object> delete(@PathVariable("rentId") Long id){
-    return this.rentService.deleteRent(id);
-}
-}
+    @DeleteMapping(path = "{rentId}")
+    public ResponseEntity<Object> delete(@PathVariable("rentId") Long id){
+        return this.rentService.deleteRent(id);
+    }
+    }

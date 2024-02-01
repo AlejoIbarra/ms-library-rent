@@ -56,6 +56,8 @@ public class ClientController {
         return clientService.getClientByName(firstName);
     }
 
+
+    //http://localhost:8080/api/v1/clients/search?query=Ale
     @GetMapping("/search")
     public ResponseEntity<List<Client>> searchClients(@RequestParam(value = "query") String query) {
         List<Client> clients = clientService.searchClients(query);

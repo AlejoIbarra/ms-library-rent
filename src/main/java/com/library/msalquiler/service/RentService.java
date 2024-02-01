@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -49,8 +50,47 @@ public class RentService {
         return ResponseEntity.status(HttpStatus.CREATED).body(data);
     }
 
-    // Add method to update Rent if needed
+    // Add method to update Rent if
 
+
+    public ResponseEntity<Object> updateRent(Long rentId, Rent updatedRent) {
+        Optional<Rent> optionalRent = rentRepository.findById(rentId);
+
+        return optionalRent.map(existingRent -> {
+            existingRent.setStartDate(updatedRent.getStartDate());
+            existingRent.setEndDate(updatedRent.getEndDate());
+            existingRent.setReturn_date(updatedRent.getReturn_date());
+            existingRent.setPenalty_fee(updatedRent.getPenalty_fee());
+
+            Rent savedRent = rentRepository.save(existingRent);
+
+            return buildResponse(savedRent, "Rent updated successfully", HttpStatus.OK);
+        }).orElseGet(() -> buildErrorResponse("Rent with the given id not found", HttpStatus.NOT_FOUND));
+    }
+
+    private ResponseEntity<Object> buildResponse(Object body, String message, HttpStatus status) {
+        return ResponseEntity.status(status).body(body);
+    }
+
+    private ResponseEntity<Object> buildErrorResponse(String message, HttpStatus status) {
+        return ResponseEntity.status(status).body(message);
+    }
+
+    public ResponseEntity<Object> patchReturnDate(Long rentId) {
+        Optional<Rent> optionalRent = rentRepository.findById(rentId);
+
+        return optionalRent.map(existingRent -> {
+            existingRent.setReturn_date(LocalDate.now());
+            Rent savedRent = rentRepository.save(existingRent);
+
+            return buildResponse(savedRent, "Return date registered successfully", HttpStatus.OK);
+        }).orElseGet(() -> buildErrorResponse("Rent with the given id not found", HttpStatus.NOT_FOUND));
+    }
+
+
+    public List<Rent> searchRentsByStartDate(LocalDate startDate) {
+        return rentRepository.findByStartDate(startDate);
+    }
     /**
      * Deletes a rent by its ID.
      *
