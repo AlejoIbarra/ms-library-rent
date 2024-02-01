@@ -1,12 +1,12 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/rent?currentSchema=rent
+    url: jdbc:postgresql://roundhouse.proxy.rlwy.net:25855/railway
     username: postgres
-    password: alejo
+    password: gAFeDD53BAcG5c3C1aaace*b6G34eC5f
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
       show-sql: true
       properties:
         hibernate:

@@ -1,7 +1,9 @@
 package com.library.msalquiler.service;
 
 import com.library.msalquiler.model.Client;
+import com.library.msalquiler.model.Rent;
 import com.library.msalquiler.repository.ClientRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +53,15 @@ public class ClientService {
         }
     }
 
+
+
+
+    public List<Client> searchClients(String query) {
+        return clientRepository.findByFirstNameIgnoreCaseContainingOrLastNameIgnoreCaseContaining(query, query);
+    }
+
+
+
     /**
      * Create a new client.
      *
@@ -97,6 +108,23 @@ public class ClientService {
         }
     }
 
+    public ResponseEntity<Object> getClientByName(String firstName) {
+        Optional<Client> client = clientRepository.findByfirstName(firstName);
+
+        if (client.isPresent()) {
+            data.put("data", client.get());
+            data.put("message", "Client found successfully");
+            return ResponseEntity.ok(data);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(getErrorResponse("Client with the provided name not found"));
+        }
+    }
+
+
+
+
+
     /**
      * Deletes a client by its ID.
      *
@@ -117,6 +145,30 @@ public class ClientService {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(data);
     }
 
+    public int getNumberOfRentals(Long clientId) {
+        Optional<Client> clientOptional = clientRepository.findById(clientId);
+
+        if (clientOptional.isPresent()) {
+            Client client = clientOptional.get();
+            List<Rent> rents = client.getRents();
+            return rents.size();
+        } else {
+            return 0;
+        }
+    }
+
+    public List<Rent> getRentsByClientId(Long clientId) {
+        Optional<Client> clientOptional = clientRepository.findById(clientId);
+
+        if (clientOptional.isPresent()) {
+            Client client = clientOptional.get();
+            return client.getRents();
+        } else {
+
+            throw new EntityNotFoundException("Client with id " + clientId + " not found");
+        }
+    }
+
     private HashMap<String, Object> getErrorResponse(String errorMessage) {
         data.put("error", true);
         data.put("message", errorMessage);
@@ -124,8 +176,8 @@ public class ClientService {
     }
 
     private void updateClientProperties(Client client, Client updatedClient) {
-        client.setFirst_name(updatedClient.getFirst_name());
-        client.setLast_name(updatedClient.getLast_name());
+        client.setFirstName(updatedClient.getFirstName());
+        client.setLastName(updatedClient.getLastName());
         client.setBirthdate(updatedClient.getBirthdate());
         client.setMail(updatedClient.getMail());
         client.setAddress(updatedClient.getAddress());

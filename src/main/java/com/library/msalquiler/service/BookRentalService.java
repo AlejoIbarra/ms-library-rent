@@ -50,4 +50,6 @@ public class BookRentalService {
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .body("Successfully deleted");
     }
+
+
 }

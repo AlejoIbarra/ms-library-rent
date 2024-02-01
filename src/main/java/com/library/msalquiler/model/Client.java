@@ -1,7 +1,9 @@
 package com.library.msalquiler.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import com.library.msalquiler.model.Rent;
 
 
 import java.time.LocalDate;
@@ -15,9 +17,9 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String first_name;
+    private String firstName;
 
-    private String last_name;
+    private String lastName;
 
     private LocalDate birthdate;
 
@@ -32,33 +34,37 @@ public class Client {
 
     private int type_identity;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "client")
     private List<Rent> rents;
+
 
     public Client() {
     }
 
-    public Client(Long id, String first_name, String last_name, LocalDate birthdate, String mail, String address, String phone, String identity, int type_identity) {
-        this.id = id;
-        this.first_name = first_name;
-        this.last_name = last_name;
+    public Client(String firstName, String lastName, LocalDate birthdate, String mail, String address, String phone, String identity, int type_identity, List<Rent> rents) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.birthdate = birthdate;
         this.mail = mail;
         this.address = address;
         this.phone = phone;
         this.identity = identity;
         this.type_identity = type_identity;
+        this.rents = rents;
     }
 
-    public Client(String first_name, String last_name, LocalDate birthdate, String mail, String address, String phone, String identity, int type_identity) {
-        this.first_name = first_name;
-        this.last_name = last_name;
+    public Client(Long id, String firstName, String lastName, LocalDate birthdate, String mail, String address, String phone, String identity, int type_identity, List<Rent> rents) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.birthdate = birthdate;
         this.mail = mail;
         this.address = address;
         this.phone = phone;
         this.identity = identity;
         this.type_identity = type_identity;
+        this.rents = rents;
     }
 
     public Long getId() {
@@ -69,20 +75,20 @@ public class Client {
         this.id = id;
     }
 
-    public String getFirst_name() {
-        return first_name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLast_name() {
-        return last_name;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public LocalDate getBirthdate() {
@@ -131,5 +137,14 @@ public class Client {
 
     public void setType_identity(int type_identity) {
         this.type_identity = type_identity;
+    }
+
+    public void setRents(List<Rent> rents) {
+        this.rents = rents;
+    }
+
+    public List<Rent> getRents() {
+        return rents;
+
     }
 }
