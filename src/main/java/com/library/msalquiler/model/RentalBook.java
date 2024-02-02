@@ -1,5 +1,6 @@
 package com.library.msalquiler.model;
 
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -8,30 +9,29 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity
-@Table(name = "inventories")
+@Table(name = "rental_books")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Inventory {
+public class RentalBook {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="rental_id")
+    private Rental rental;
+
     @Column(name = "book_id")
     private Long bookId;
 
-    @PositiveOrZero
-    @Column(name = "stock")
-    private int stock;
-
     @NotNull
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @PositiveOrZero
+    @Column(name = "cost")
+    private double cost;
 
 }

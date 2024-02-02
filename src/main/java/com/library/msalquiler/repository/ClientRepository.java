@@ -1,30 +1,45 @@
 package com.library.msalquiler.repository;
 
 import com.library.msalquiler.model.Client;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.library.msalquiler.repository.jpa.ClientJpaRepository;
+import com.library.msalquiler.repository.utils.SearchCriteria;
+import com.library.msalquiler.repository.utils.SearchOperation;
+import com.library.msalquiler.repository.utils.SearchStatement;
+import io.micrometer.common.util.StringUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ClientRepository extends JpaRepository <Client, Long> {
+@RequiredArgsConstructor
+public class ClientRepository {
 
+    private final ClientJpaRepository repository;
 
-    Optional<Client> findByIdentity(String identity);
+    public Client save(Client client) { return repository.save(client); }
 
+    public List<Client> findAll() {
+        return repository.findAll();
+    }
 
+    public Optional<Client> findById(Long id) { return repository.findById(id); }
 
-    Optional<Client> findByfirstName(String firstName);
+    public List<Client> search(String name, String identity) {
+        SearchCriteria<Client> spec = new SearchCriteria<>();
+        if (StringUtils.isNotBlank(name)) {
+            spec.add(new SearchStatement("name", name, SearchOperation.MATCH));
+        }
+        if (StringUtils.isNotBlank(identity)) {
+            spec.add(new SearchStatement("identity", identity, SearchOperation.EQUAL));
+        }
+        return repository.findAll(spec);
+    }
 
+    public Optional<Client> findByIdentity(String identity) { return repository.findByIdentity(identity); }
 
-    List<Client> findByFirstNameIgnoreCaseContainingOrLastNameIgnoreCaseContaining(String firstName, String lastName);
+    public boolean existsById(Long id) { return repository.existsById(id); }
 
-
-
-
-
-
-
-
+    public void deleteById(Long id) { repository.deleteById(id); }
 }

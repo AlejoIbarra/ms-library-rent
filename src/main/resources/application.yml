@@ -1,14 +1,37 @@
-spring:
-  datasource:
-    url: jdbc:postgresql://roundhouse.proxy.rlwy.net:25855/railway
-    username: postgres
-    password: gAFeDD53BAcG5c3C1aaace*b6G34eC5f
+## Configuracion de Instancia
+server:
+  port: 8082
+  error:
+    include-stacktrace: on_param
 
-  jpa:
-    hibernate:
-      ddl-auto: create
+## Configuracion del cliente de Eureka
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
+  instance:
+    preferIpAddress: true
+    hostname: ms-library-rentals
+
+## Configuration for App name and Spring Data
+spring:
+  application:
+    name: ms-library-rentals
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/operador
+    username: root
+    password: password
+    jpa:
       show-sql: true
-      properties:
-        hibernate:
-          dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
+
+## Configuracion secundaria (custom)
+getBook:
+  url: http://ms-library-books/api/libros/%s
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type: TRACE
