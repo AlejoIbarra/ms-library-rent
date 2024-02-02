@@ -13,12 +13,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service class for managing Client entities.
+ */
 @Service
 public class ClientService {
 
     private final ClientRepository clientRepository;
     private final HashMap<String, Object> data;
 
+    /**
+     * Constructor for ClientService.
+     *
+     * @param clientRepository The repository for Client entities.
+     */
     @Autowired
     public ClientService(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
@@ -53,14 +61,15 @@ public class ClientService {
         }
     }
 
-
-
-
+    /**
+     * Searches clients based on a query for first name or last name.
+     *
+     * @param query The query string for searching clients.
+     * @return List of clients matching the query.
+     */
     public List<Client> searchClients(String query) {
         return clientRepository.findByFirstNameIgnoreCaseContainingOrLastNameIgnoreCaseContaining(query, query);
     }
-
-
 
     /**
      * Create a new client.
@@ -108,8 +117,14 @@ public class ClientService {
         }
     }
 
+    /**
+     * Retrieves a client by first name.
+     *
+     * @param firstName The first name of the client to be retrieved.
+     * @return ResponseEntity with the operation result.
+     */
     public ResponseEntity<Object> getClientByName(String firstName) {
-        Optional<Client> client = clientRepository.findByfirstName(firstName);
+        Optional<Client> client = clientRepository.findByFirstName(firstName);
 
         if (client.isPresent()) {
             data.put("data", client.get());
@@ -120,10 +135,6 @@ public class ClientService {
                     .body(getErrorResponse("Client with the provided name not found"));
         }
     }
-
-
-
-
 
     /**
      * Deletes a client by its ID.
@@ -145,6 +156,12 @@ public class ClientService {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(data);
     }
 
+    /**
+     * Retrieves the number of rentals for a client.
+     *
+     * @param clientId The ID of the client.
+     * @return The number of rentals.
+     */
     public int getNumberOfRentals(Long clientId) {
         Optional<Client> clientOptional = clientRepository.findById(clientId);
 
@@ -157,6 +174,12 @@ public class ClientService {
         }
     }
 
+    /**
+     * Retrieves rents for a client by ID.
+     *
+     * @param clientId The ID of the client.
+     * @return List of rents for the client.
+     */
     public List<Rent> getRentsByClientId(Long clientId) {
         Optional<Client> clientOptional = clientRepository.findById(clientId);
 
@@ -164,7 +187,6 @@ public class ClientService {
             Client client = clientOptional.get();
             return client.getRents();
         } else {
-
             throw new EntityNotFoundException("Client with id " + clientId + " not found");
         }
     }

@@ -1,14 +1,15 @@
 package com.library.msalquiler.model;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import com.library.msalquiler.model.Rent;
 
-
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Entity class representing details of a client.
+ */
 @Entity
 @Table
 public class Client {
@@ -38,10 +39,25 @@ public class Client {
     @OneToMany(mappedBy = "client")
     private List<Rent> rents;
 
-
+    /**
+     * Default constructor for Client.
+     */
     public Client() {
     }
 
+    /**
+     * Constructor for creating a new Client with basic information.
+     *
+     * @param firstName    The first name of the client.
+     * @param lastName     The last name of the client.
+     * @param birthdate    The birthdate of the client.
+     * @param mail         The email address of the client.
+     * @param address      The address of the client.
+     * @param phone        The phone number of the client.
+     * @param identity     The identity (e.g., passport, national ID) of the client.
+     * @param type_identity The type of identity (e.g., passport, national ID).
+     * @param rents        The list of rents associated with the client.
+     */
     public Client(String firstName, String lastName, LocalDate birthdate, String mail, String address, String phone, String identity, int type_identity, List<Rent> rents) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -54,6 +70,20 @@ public class Client {
         this.rents = rents;
     }
 
+    /**
+     * Constructor for creating a new Client with an existing ID and basic information.
+     *
+     * @param id           The ID of the client.
+     * @param firstName    The first name of the client.
+     * @param lastName     The last name of the client.
+     * @param birthdate    The birthdate of the client.
+     * @param mail         The email address of the client.
+     * @param address      The address of the client.
+     * @param phone        The phone number of the client.
+     * @param identity     The identity (e.g., passport, national ID) of the client.
+     * @param type_identity The type of identity (e.g., passport, national ID).
+     * @param rents        The list of rents associated with the client.
+     */
     public Client(Long id, String firstName, String lastName, LocalDate birthdate, String mail, String address, String phone, String identity, int type_identity, List<Rent> rents) {
         this.id = id;
         this.firstName = firstName;
@@ -66,6 +96,8 @@ public class Client {
         this.type_identity = type_identity;
         this.rents = rents;
     }
+
+    // Getter and setter methods for each field
 
     public Long getId() {
         return id;
@@ -145,6 +177,5 @@ public class Client {
 
     public List<Rent> getRents() {
         return rents;
-
     }
 }
